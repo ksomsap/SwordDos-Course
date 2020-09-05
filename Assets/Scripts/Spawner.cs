@@ -6,15 +6,26 @@ public class Spawner : MonoBehaviour
 {
     public GameObject zombie;
     public float waveTime;
+
+    public GameObject Player;
+
+    private void Start()
+    {
+        Player = GameObject.FindGameObjectWithTag("Player");
+    }
+
     void Update()
     {
-        waveTime += Time.deltaTime;
-        if(waveTime > 2)
+        if(SceneController.gameStart && Player != null)
         {
-            Vector2 randomPosition = new Vector2(Random.Range(-6.5f, 6.5f), Random.Range(-2.5f, 2.5f));
-            Instantiate(zombie, randomPosition, Quaternion.identity);
+            waveTime += Time.deltaTime;
+            if (waveTime > 1f)
+            {
+                Vector2 randomPosition = new Vector2(Random.Range(-6.5f, 6.5f), Random.Range(-2.5f, 2.5f));
+                Instantiate(zombie, randomPosition, Quaternion.identity);
 
-            waveTime = 0f;
+                waveTime = 0f;
+            }
         }
     }
 }

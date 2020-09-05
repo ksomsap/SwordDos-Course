@@ -18,6 +18,9 @@ public class PlayerMovement : MonoBehaviour
 
     public TextMeshProUGUI scoreText;
     static public int scoreValue = 0;
+
+
+    public Joystick joystick;
     private void Start()
     {
         scoreValue = 0;
@@ -27,7 +30,10 @@ public class PlayerMovement : MonoBehaviour
 
     private void Update()
     {
-        Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        //Vector2 moveInput = new Vector2(Input.GetAxisRaw("Horizontal"), Input.GetAxisRaw("Vertical"));
+        Vector2 moveInput = new Vector2(joystick.Horizontal,joystick.Vertical);
+
+
         moveAmount = moveInput.normalized * speed;
         moveSword = moveInput.normalized;
 
@@ -51,18 +57,21 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.MovePosition(rb.position + moveAmount * Time.fixedDeltaTime);
-
-        if(isDashButtonDown)
+        if(SceneController.gameStart)
         {
-            rb.MovePosition(rb.position + moveAmount * 0.3f);
-            isDashButtonDown = false;
+            rb.MovePosition(rb.position + moveAmount * Time.fixedDeltaTime);
+
+            if (isDashButtonDown)
+            {
+                rb.MovePosition(rb.position + moveAmount * 0.3f);
+                isDashButtonDown = false;
+            }
         }
     }
 
     private void FollowSword()
     {
-        if(moveAmount != Vector2.zero)
+        if (moveAmount != Vector2.zero)
         {
             Vector2 direction = sword.transform.position - transform.position;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -70,5 +79,10 @@ public class PlayerMovement : MonoBehaviour
 
             sword.transform.localPosition = moveSword;
         }
+    }
+
+    public void DashAttack()
+    {
+        isDashButtonDown = true;
     }
 }

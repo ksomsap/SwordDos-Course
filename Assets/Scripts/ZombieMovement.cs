@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class ZombieMovement : MonoBehaviour
 {
-    public Transform Player;
+    public GameObject Player;
     public float speed = 1f;
 
     public GameObject effectPlayerDead;
@@ -17,13 +17,13 @@ public class ZombieMovement : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
-        Player = GameObject.FindGameObjectWithTag("Player").transform;
+        Player = GameObject.FindGameObjectWithTag("Player");
     }
     private void FixedUpdate()
     {
         if(Player != null && born)
         {
-            transform.position = Vector2.MoveTowards(transform.position, Player.position, speed * Time.fixedDeltaTime);
+            transform.position = Vector2.MoveTowards(transform.position, Player.transform.position, speed * Time.fixedDeltaTime);
             anim.SetBool("isWalking", true);
         }
         else
@@ -54,6 +54,7 @@ public class ZombieMovement : MonoBehaviour
             {
                 Instantiate(effectPlayerDead, Player.transform.position, Quaternion.identity);
                 Destroy(Player.gameObject);
+                AdsManager.Instance.ShowVideoAd();
             }
         }
     }
